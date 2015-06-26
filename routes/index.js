@@ -3,6 +3,7 @@ var router = express.Router();
 var fs = require('fs');
 var path = require('path');
 var readDir = require('readdir');
+var getMime = require('mime-types')
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -30,7 +31,6 @@ function isUnixHiddenPath(path) {
 
 function dirTree(filename) {
     if (!isUnixHiddenPath(filename)) {
-        console.log("Check:" + filename);
         var stats = fs.lstatSync(filename),
             info = {
                 path: filename,
@@ -41,22 +41,22 @@ function dirTree(filename) {
             info.type = "folder";
             info.children = new Array();
             //var files = fs.readdirSync(filename);
-            var files = readDir.readSync(filename, ['*.java', '*.xml', '*.docx', '*.PDF', '*.DOC', '*.DOCX', '*/'], readDir.INCLUDE_DIRECTORIES + readDir.CASE_SORT);
+            var files = readDir.readSync(filename, ['*.java', '*.xml', '*.docx', '*.PDF', '*.DOC', '*.DOCX', '*/'],
+                readDir.INCLUDE_DIRECTORIES + readDir.CASE_SORT);
             files.forEach(function(entry) {
                 if (!isUnixHiddenPath(entry)) {
                     var child = dirTree(filename + entry);
                     info.children.push(child);
                     info.children.sort(function(one, second) {
-                        return ((second.type == one.type ) ? 0 : ((second.type > one.type) ? 1 : -1));
-                    });                    
-                    console.log(info.children.length);
-
+                        return ((second.type == one.type) ? 0 : ((second.type > one.type) ? 1 : -1));
+                    });
                 }
             });
         } else {
             // Assuming it's a file. In real life it could be a symlink or
             // something else!
             info.type = "file";
+            info.mime = getMime.lookup(info.path);
         }
         return info;
     }
@@ -65,7 +65,7 @@ function dirTree(filename) {
 router.get('/getBooks', function(req, res, next) {
     __parentDir = path.dirname(module.parent.filename);
     //var root = path.join(__parentDir, 'bibliografia');
-    var root = path.join('/home/guillermo/Downloads/java/bagora/');
+    var root = path.join('/home/guillermo/Documents/prueba/gestor/bibliografia/');
     var json = dirTree(root);
     res.json(json);
 
