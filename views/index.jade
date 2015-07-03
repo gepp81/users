@@ -3,6 +3,18 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}
+ 
+  div(ng-controller='books')
+    p The content is {{greeting.path}}
   
-   input(ng-model='name')
-   label Hello {{ name }}
+  input(ng-model='name')
+  label Hello {{ name }}
+  
+  treecontrol(class="tree-classic",tree-model="treedata", on-selection="showSelected(node)")    
+    button(ng-click="buttonClick($event, node)") Click Me!
+      label {{node.label}} ({{node.id}} ) {{$index}}
+
+  link(rel='stylesheet', href='/stylesheets/angular.treeview.css')
+  script(src='/javascripts/books.js', type='text/javascript')
+  script(src='/javascripts/angular.treeview-master/angular.treeview.min.js')
+  

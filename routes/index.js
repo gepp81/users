@@ -3,7 +3,8 @@ var router = express.Router();
 var fs = require('fs');
 var path = require('path');
 var readDir = require('readdir');
-var getMime = require('mime-types')
+var getMime = require('mime-types');
+var settings = require('../config/settings.js');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -13,7 +14,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/bibliografia', function(req, res, next) {
-    res.render('index', {
+    res.render('bibliography', {
         title: 'Bibliografia'
     });
 });
@@ -31,12 +32,13 @@ function isUnixHiddenPath(path) {
 
 function dirTree(filename) {
     if (!isUnixHiddenPath(filename)) {
+        var pathTruncated = filename.replace(settings.bibliography.path, '');
         var stats = fs.lstatSync(filename),
             info = {
-                path: filename,
-                name: path.basename(filename)
+                path: pathTruncated,
+                name: path.dirname(path)
             };
-
+        
         if (stats.isDirectory()) {
             info.type = "folder";
             info.children = new Array();
@@ -62,10 +64,10 @@ function dirTree(filename) {
     }
 }
 
-router.get('/getBooks', function(req, res, next) {
+router.get('/getBibliography', function(req, res, next) {
     __parentDir = path.dirname(module.parent.filename);
     //var root = path.join(__parentDir, 'bibliografia');
-    var root = path.join('/home/guillermo/Documents/prueba/gestor/bibliografia/');
+    var root = path.join(settings.bibliography.path);
     var json = dirTree(root);
     res.json(json);
 

@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  
+  link(rel='stylesheet', href='/stylesheets/tree-control.css')
+  script(src='/javascripts/angular-tree-control.js', type='text/javascript')
+  script(src='/javascripts/app.js')  
+
+  div(ng-controller='bibliographyController')
+    treecontrol(class="tree-classic",tree-model="roleList", options="treeOptions", on-selection="showSelected(node)", selected-node="node1") {{node.path}}
+d
+
+
+  script(src='/javascripts/app.js', type='text/javascript')
