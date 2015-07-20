@@ -1,0 +1,14 @@
+<link rel='stylesheet' href='/stylesheets/style.css' />
+<link rel='stylesheet' href='/stylesheets/angular-tree/tree-control.css' />
+
+<div ng-controller='bibliographyController'>
+    <treecontrol class="tree-classic" tree-model="roleList" options="treeOptions" on-selection="showSelected(node)" selected-node="node1">
+        {{node.name}}
+        <span ng-if="node.type == 'file'">({{node.size}})</span>
+        <a href="/bibliografia/{{node.path}}" target="_blank">
+            <span style="padding-left: 0.5em; padding-top: 1em; cursor: pointer;" ng-if="node.type == 'file'">
+                <img class="bibliography-download" src="/images/download.png")/>
+            </span>
+        </a>
+    </treecontrol>
+</div>

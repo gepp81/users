@@ -11,7 +11,11 @@ var settings = {
     },
     bibliography: {
         path: '/home/guillermo/Documents/prueba/gestor/bibliografia/'
+    },
+    tokenAuth: {
+        name: "gpi123"
     }
+    
 };
 
 module.exports = settings;

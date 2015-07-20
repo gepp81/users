@@ -59,21 +59,17 @@ module.exports = function (db, models) {
             type: 'text',
             required: true
         },
-        token: {
-            type: 'text',
-            required: true
-        },
         admin: Boolean
     });
 
     models.User.hasMany('roles', models.Role);
 
     // Sincronize db ONLY FOR FIRST
-    db.drop(function () {
+    /*db.drop(function () {
         // dropped all tables from defined models (Person and Pet)
 
         db.sync(function () {
             // created tables for Person model
         });
-    });
+    });*/
 };

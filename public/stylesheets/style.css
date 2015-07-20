@@ -1,6 +1,4 @@
 body {
-    padding: 50px;
-    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
@@ -10,4 +8,14 @@ a {
 .bibliography-download {
     width: 1em;
     height: 1em;
+}
+
+.loginBody {
+    width: 35%;
+    margin: auto;
+    margin-top: 10%;
+}
+
+.input-group {
+    margin-top: 5%;
 }

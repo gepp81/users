@@ -1,30 +1,30 @@
 var express = require('express');
 var router = express.Router();
 var fs = require('fs');
-var path = require('path');
+var pathFunctions = require('path');
 var readDir = require('readdir');
 var getMime = require('mime-types');
 var settings = require('../config/settings.js');
+var auth = require('../config/auth.js');
+var authUser = require('../config/accessAuth.js');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-    res.render('index', {
-        title: 'Express'
-    });
+    res.sendFile(pathFunctions.join(__dirname, '..', 'public', 'views', '/index.html'));
 });
 
-router.get('/bibliografia', function(req, res, next) {
+router.get('/bibliografia', authUser.ensureAuthenticated, function(req, res, next) {
     res.render('bibliography', {
         title: 'Bibliografia'
     });
 });
 
-router.post('/download', function(req, res, next) {
+/*router.post('/download', function(req, res, next) {
     console.log(req.body);
     __parentDir = path.dirname(module.parent.filename);
     var file = path.join(__parentDir, 'bibliografia', req.body.filename);
     res.download(file);
-});
+});*/
 
 function isUnixHiddenPath(path) {
     return (/(^|.\/)\.+[^\/\.]/g).test(path);
@@ -36,15 +36,14 @@ function dirTree(filename) {
         var stats = fs.lstatSync(filename),
             info = {
                 path: pathTruncated,
-                name: path.dirname(path)
+                name: pathFunctions.basename(filename)
             };
-        
         if (stats.isDirectory()) {
             info.type = "folder";
             info.children = new Array();
-            //var files = fs.readdirSync(filename);
             var files = readDir.readSync(filename, ['*.java', '*.xml', '*.docx', '*.PDF', '*.DOC', '*.DOCX', '*/'],
                 readDir.INCLUDE_DIRECTORIES + readDir.CASE_SORT);
+            
             files.forEach(function(entry) {
                 if (!isUnixHiddenPath(entry)) {
                     var child = dirTree(filename + entry);
@@ -54,9 +53,12 @@ function dirTree(filename) {
                     });
                 }
             });
+            
         } else {
             // Assuming it's a file. In real life it could be a symlink or
             // something else!
+            var size = parseInt(stats.size / 1000000);
+            info.size = size < 1 ? "< 1MB" :  size + "MB";
             info.type = "file";
             info.mime = getMime.lookup(info.path);
         }
@@ -64,15 +66,18 @@ function dirTree(filename) {
     }
 }
 
+router.get('/auth/signup', auth.userSignup);
+router.post('/auth/login', auth.userLogin);
+router.post('/auth/logout', auth.userLogout);
+
+//router.get('/getBibliography', authUser.ensureAuthenticated, function(req, res, next) {
 router.get('/getBibliography', function(req, res, next) {
-    __parentDir = path.dirname(module.parent.filename);
+    __parentDir = pathFunctions.dirname(module.parent.filename);
     //var root = path.join(__parentDir, 'bibliografia');
-    var root = path.join(settings.bibliography.path);
+    var root = pathFunctions.join(settings.bibliography.path);
     var json = dirTree(root);
     res.json(json);
 
 });
-
-
 
 module.exports = router;

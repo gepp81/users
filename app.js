@@ -15,24 +15,24 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
+app.engine('.html', require('jade').renderFile);
+
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 
 // orm2
-/*
 app.use(orm.express(settings.database, {
-  define: function (db, models, next) {
-    var listModels = require('./models/');
-    listModels(db, models);
-    next();
-  }
-}));*/
-
-app.use(bodyParser.urlencoded({
-    extended: false
+    define: function(db, models, next) {
+        var listModels = require('./models/');
+        listModels(db, models);
+        next();
+    }
 }));
+
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -43,11 +43,8 @@ app.use(function(req, res, next) {
     var err = {};
     err.status = "404";
     if (req.accepts('html')) {
-        res.render('error', {
-            url: req.url,
-            error: err
-        });
-        return;
+        res.locals.errorDescription = 404;
+        return res.redirect("/#/error?type=404");
     }
 });
 
@@ -55,24 +52,21 @@ app.use(function(req, res, next) {
 // will print stacktrace
 if (app.get('env') === 'development') {
     app.use(function(err, req, res, next) {
-        res.status(err.status || 500);
-        err.status = "500";
-        res.render('error', {
-            message: err.message,
-            error: err
+
+        return res.status(500).send({
+            error: "Cant Connect"
         });
+
     });
 }
 
 // production error handler
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    err.status = "500";
-    res.render('error', {
-        message: err.message,
-        error: err
+    return res.status(500).send({
+        error: "Cant Connect"
     });
+
 });
 
 module.exports = app;
