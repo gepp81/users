@@ -6,25 +6,11 @@ var readDir = require('readdir');
 var getMime = require('mime-types');
 var settings = require('../config/settings.js');
 var auth = require('../config/auth.js');
-var authUser = require('../config/accessAuth.js');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
     res.sendFile(pathFunctions.join(__dirname, '..', 'public', 'views', '/index.html'));
 });
-
-router.get('/bibliografia', authUser.ensureAuthenticated, function(req, res, next) {
-    res.render('bibliography', {
-        title: 'Bibliografia'
-    });
-});
-
-/*router.post('/download', function(req, res, next) {
-    console.log(req.body);
-    __parentDir = path.dirname(module.parent.filename);
-    var file = path.join(__parentDir, 'bibliografia', req.body.filename);
-    res.download(file);
-});*/
 
 function isUnixHiddenPath(path) {
     return (/(^|.\/)\.+[^\/\.]/g).test(path);
@@ -70,7 +56,7 @@ router.get('/auth/signup', auth.userSignup);
 router.post('/auth/login', auth.userLogin);
 router.post('/auth/logout', auth.userLogout);
 
-//router.get('/getBibliography', authUser.ensureAuthenticated, function(req, res, next) {
+//router.get('/getBibliography', auth.ensureAuthenticated, function(req, res, next) {
 router.get('/getBibliography', function(req, res, next) {
     __parentDir = pathFunctions.dirname(module.parent.filename);
     //var root = path.join(__parentDir, 'bibliografia');

@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-// orm2
+// Load Models DB
 app.use(orm.express(settings.database, {
     define: function(db, models, next) {
         var listModels = require('./models/');

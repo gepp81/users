@@ -1,4 +1,3 @@
-//angular module
 var app = angular.module('GestorUI', ['treeControl', 'ngResource', 'satellizer', 'ui.router'])
     .config(function($authProvider, $urlRouterProvider, $stateProvider) {
         // Parametros de configuración
@@ -63,20 +62,22 @@ app
 
 function SignUpController($auth, $location) {
     var vm = this;
-    this.signup = function() {
-        $auth.signup({
-                email: vm.email,
-                password: vm.password
-            })
-            .then(function(response) {
+    this.signup = function(valid) {
+        if (valid) {
+            $auth.signup({
+                    user: vm.email,
+                    password: vm.password
+                })
+                .then(function(response) {
 
-                // Si se ha registrado correctamente,
-                // Podemos redirigirle a otra parte
-                $location.path("/");
-            })
-            .catch(function(response) {
-                // Si ha habido errores, llegaremos a esta función
-            });
+                    // Si se ha registrado correctamente,
+                    // Podemos redirigirle a otra parte
+                    $location.path("/");
+                })
+                .catch(function(response) {
+                    // Si ha habido errores, llegaremos a esta función
+                });
+        }
     }
 }
 
