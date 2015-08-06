@@ -1,4 +1,4 @@
-var app = angular.module('GestorUI', ['treeControl', 'ngResource', 'satellizer', 'ui.router'])
+var app = angular.module('GestorUI', ['treeControl', 'ngResource', 'satellizer', 'ui.router', 'ui.bootstrap'])
     .config(function($authProvider, $urlRouterProvider, $stateProvider) {
         // Parametros de configuración
         $authProvider.loginUrl = "http://localhost:3000/auth/login";
@@ -43,6 +43,35 @@ app.factory("Book", function($resource) {
     return $resource("/getBibliography");
 });
 
+app.directive('equals', function() {
+  return {
+    restrict: 'A', // only activate on element attribute
+    require: '?ngModel', // get a hold of NgModelController
+    link: function(scope, elem, attrs, ngModel) {
+      if(!ngModel) return; // do nothing if no ng-model
+
+      // watch own value and re-validate on change
+      scope.$watch(attrs.ngModel, function() {
+        validate();
+      });
+
+      // observe the other value and re-validate on change
+      attrs.$observe('equals', function (val) {
+        validate();
+      });
+
+      var validate = function() {
+        // values
+        var val1 = ngModel.$viewValue;
+        var val2 = attrs.equals;
+
+        // set validity
+        ngModel.$setValidity('equals', ! val1 || ! val2 || val1 === val2);
+      };
+    }
+  }
+});
+
 app.controller("bibliographyController", function($scope, Book) {
     Book.get(function(data) {
         $scope.roleList = data;
@@ -65,8 +94,10 @@ function SignUpController($auth, $location) {
     this.signup = function(valid) {
         if (valid) {
             $auth.signup({
-                    user: vm.email,
-                    password: vm.password
+                    user: vm.user,
+                    password: vm.password,
+                    passwordRepeat: vm.passwordRepeat,
+                    email: vm.email
                 })
                 .then(function(response) {
 

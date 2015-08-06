@@ -39,7 +39,7 @@ exports.userSignup = function(req, res) {
 exports.userLogin = function(req, res) {
     console.log(req.body);
     if (req.body !== undefined && req.body.password !== undefined && req.body.user !== undefined) {
-        req.models.User.find({
+        req.models.User.find({ 
             username: req.body.user.toLowerCase(),
             password: req.body.password
         }, function(err, users) {

@@ -6,14 +6,14 @@ var settings = {
         },
         host: "127.0.0.1",
         database: "managment",
-        user: "",
-        password: ""
+        user: "root",
+        password: "root"
     },
     bibliography: {
         path: '/home/guillermo/Documents/prueba/gestor/bibliografia/'
     },
     tokenAuth: {
-        name: ""
+        name: "gpi123"
     }
     
 };
