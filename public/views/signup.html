@@ -1,43 +1,77 @@
-<div class="loginBody">
+<div class="autentificationForm">
     <form ng-submit="signup.signup(signUp.$valid)" method="post" name="signUp" novalidate>
+        <!-- User -->
         <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">
                 <i class="fa fa-user fa-lg"></i>&nbsp;
             </span>
             <input type="text" class="form-control" name="user" ng-model="signup.user" placeholder="Usuario" aria-describedby="basic-addon1" ng-minlength="5" ng-maxlength="15" required />
         </div>
-        <span style="color:red" ng-show="signUp.user.$dirty && signUp.user.$invalid">
+        <span ng-show="signUp.user.$dirty && signUp.user.$invalid">
             <div class="alert alert-danger" role="alert">El usuario debe tener entre 5 y 15 letras.</div>
         </span>
+        <span ng-show="errors.user.userExists">
+            <div class="alert alert-danger" role="alert">{{errors.user.userExists.msg}}</div>
+        </span>
 
+        <!-- Password -->
         <div class="input-group">
             <span class="input-group-addon" id="basic-addon2">
                 <i class="fa fa-key fa-lg"></i>
             </span>
-            <input type="password" class="form-control" name="password" ng-model="signup.password" placeholder="Clave" aria-describedby="basic-addon1" ng-minlength="5" ng-maxlength="15" required>
+            <input type="password" class="form-control" name="password" ng-model="signup.password" placeholder="Contraseña" aria-describedby="basic-addon1" ng-minlength="5" ng-maxlength="15" required>
         </div>
-        <span style="color:red" ng-show="signUp.password.$dirty && signUp.password.$invalid">
-            <div class="alert alert-danger" role="alert">La clave debe tener entre 5 y 15 letras.</div>
+        <span ng-show="signUp.password.$dirty && signUp.password.$invalid">
+            <div class="alert alert-danger" role="alert">La contraseña debe tener entre 5 y 15 letras.</div>
         </span>
-<!-- Cambiar mensajes de claves y email -->
+
+        <!-- Password Repeat-->
         <div class="input-group">
             <span class="input-group-addon" id="basic-addon3">
                 <i class="fa fa-key fa-lg"></i>
             </span>
-            <input type="password" class="form-control" name="passwordRepeat" ng-model="signup.passwordRepeat" placeholder="Repetir Clave" aria-describedby="basic-addon1" equals="{{signup.passwordRepeat}}" ng-minlength="5" ng-maxlength="15" required>
+            <input type="password" class="form-control" name="passwordRepeat" ng-model="signup.passwordRepeat" placeholder="Repetir Contraseña" aria-describedby="basic-addon1" equals="{{signup.passwordRepeat}}" ng-minlength="5" ng-maxlength="15" required>
         </div>
-        <span style="color:red" ng-show="(signup.passwordRepeat != signup.password) || (signUp.passwordRepeat.$dirty && signUp.passwordRepeat.$invalid)">
-            <div class="alert alert-danger" role="alert">Las claves deben ser iguales.</div>
+        <span ng-show="(signUp.passwordRepeat.$dirty && (signup.passwordRepeat != signup.password)) || (signUp.passwordRepeat.$dirty && signUp.passwordRepeat.$invalid)">
+            <div class="alert alert-danger" role="alert">
+                <span ng-show="signup.passwordRepeat != signup.password">Las contraseñas deben coincidir.</span>
+                <span ng-show="signUp.passwordRepeat.$dirty && signUp.passwordRepeat.$invalid">
+                    La longitud debe ser entre 5 y 15 letras.
+                </span>
+            </div>
         </span>
 
+        <!-- Nombre -->
         <div class="input-group">
-            <span class="input-group-addon" id="basic-addon4">
-                @&nbsp;
+            <span class="input-group-addon" id="basic-addon3">
+                <i class="fa fa-check fa-lg"></i>
             </span>
-            <input type="email" class="form-control" ng-model="signup.email" placeholder="Correo electr&oacute;nico" aria-describedby="basic-addon1" required>
+            <input type="text" class="form-control" name="firstName" ng-model="signup.firstName" placeholder="Nombre (opcional)" aria-describedby="basic-addon1">
         </div>
-        <div class="input-group" style="width: 100%;">
-            <button type="submit" class="btn btn-default" style="width: 100%;" ng-disabled="signUp.$invalid">Registrarse</button>
+
+        <!-- Apellido -->
+        <div class="input-group">
+            <span class="input-group-addon" id="basic-addon3">
+                <i class="fa fa-check fa-lg"></i>
+            </span>
+            <input type="text" class="form-control" name="lastName" ng-model="signup.lastName" placeholder="Apellido (opcional)" aria-describedby="basic-addon1">
         </div>
-    </form>
+
+        <!-- Email -->
+        <div class="input-group">
+            <span class="input-group-addon" id="basic-addon4">@&nbsp;</span>
+            <input type="email" class="form-control" name="email" ng-model="signup.email" placeholder="Correo electr&oacute;nico" aria-describedby="basic-addon1" required>
+        </div>
+        <span ng-show="signUp.email.$dirty && signUp.email.$invalid">
+            <div class="alert alert-danger" role="alert">Debe ser un correo válido.</div>
+        </span>
+
+        <span ng-show="errors.email.emailExists">
+            <div class="alert alert-danger" role="alert">{{errors.email.emailExists.msg}}</div>
+        </span>
+        
+        <div class="input-group width100">
+            <button type="submit" class="btn btn-default width100" ng-disabled="signUp.$invalid">Registrarse</button>
+        </div>
+</form>
 </div>

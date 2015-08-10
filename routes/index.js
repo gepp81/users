@@ -7,11 +7,22 @@ var getMime = require('mime-types');
 var settings = require('../config/settings.js');
 var auth = require('../config/auth.js');
 
-/* GET home page. */
+/* home page. */
 router.get('/', function(req, res, next) {
     res.sendFile(pathFunctions.join(__dirname, '..', 'public', 'views', '/index.html'));
 });
 
+/**
+ * Login, SignUp and logout
+ */
+
+router.post('/auth/signup', auth.userSignup);
+router.post('/auth/login', auth.userLogin);
+router.post('/auth/logout', auth.userLogout);
+
+/**
+ * Tree
+ */
 function isUnixHiddenPath(path) {
     return (/(^|.\/)\.+[^\/\.]/g).test(path);
 };
@@ -51,10 +62,6 @@ function dirTree(filename) {
         return info;
     }
 }
-
-router.get('/auth/signup', auth.userSignup);
-router.post('/auth/login', auth.userLogin);
-router.post('/auth/logout', auth.userLogout);
 
 //router.get('/getBibliography', auth.ensureAuthenticated, function(req, res, next) {
 router.get('/getBibliography', function(req, res, next) {

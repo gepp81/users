@@ -39,37 +39,37 @@ var app = angular.module('GestorUI', ['treeControl', 'ngResource', 'satellizer',
             });
     });
 
-app.factory("Book", function($resource) {
-    return $resource("/getBibliography");
+app.directive('equals', function() {
+    return {
+        restrict: 'A', // only activate on element attribute
+        require: '?ngModel', // get a hold of NgModelController
+        link: function(scope, elem, attrs, ngModel) {
+            if (!ngModel) return; // do nothing if no ng-model
+
+            // watch own value and re-validate on change
+            scope.$watch(attrs.ngModel, function() {
+                validate();
+            });
+
+            // observe the other value and re-validate on change
+            attrs.$observe('equals', function(val) {
+                validate();
+            });
+
+            var validate = function() {
+                // values
+                var val1 = ngModel.$viewValue;
+                var val2 = attrs.equals;
+
+                // set validity
+                ngModel.$setValidity('equals', !val1 || !val2 || val1 === val2);
+            };
+        }
+    }
 });
 
-app.directive('equals', function() {
-  return {
-    restrict: 'A', // only activate on element attribute
-    require: '?ngModel', // get a hold of NgModelController
-    link: function(scope, elem, attrs, ngModel) {
-      if(!ngModel) return; // do nothing if no ng-model
-
-      // watch own value and re-validate on change
-      scope.$watch(attrs.ngModel, function() {
-        validate();
-      });
-
-      // observe the other value and re-validate on change
-      attrs.$observe('equals', function (val) {
-        validate();
-      });
-
-      var validate = function() {
-        // values
-        var val1 = ngModel.$viewValue;
-        var val2 = attrs.equals;
-
-        // set validity
-        ngModel.$setValidity('equals', ! val1 || ! val2 || val1 === val2);
-      };
-    }
-  }
+app.factory("Book", function($resource) {
+    return $resource("/getBibliography");
 });
 
 app.controller("bibliographyController", function($scope, Book) {
@@ -89,7 +89,7 @@ app
     .controller("LoginController", LoginController)
     .controller("LogoutController", LogoutController);
 
-function SignUpController($auth, $location) {
+function SignUpController($scope, $auth, $location) {
     var vm = this;
     this.signup = function(valid) {
         if (valid) {
@@ -100,13 +100,10 @@ function SignUpController($auth, $location) {
                     email: vm.email
                 })
                 .then(function(response) {
-
-                    // Si se ha registrado correctamente,
-                    // Podemos redirigirle a otra parte
-                    $location.path("/");
+                    $location.path("/bibliografia");
                 })
-                .catch(function(response) {
-                    // Si ha habido errores, llegaremos a esta función
+                .catch(function(data) {
+                    $scope.errors = data.data;
                 });
         }
     }
@@ -114,15 +111,17 @@ function SignUpController($auth, $location) {
 
 function LoginController($auth, $location) {
     var vm = this;
-    this.login = function() {
-        $auth.login({
-                user: vm.user,
-                password: vm.password
-            })
-            .then(function(response) {
-                $location.path("/bibliografia")
-            })
-            .catch(function(response) {});
+    this.login = function(valid) {
+        if (valid) {
+            $auth.login({
+                    user: vm.user,
+                    password: vm.password
+                })
+                .then(function(response) {
+                    $location.path("/bibliografia")
+                })
+                .catch(function(response) {});
+        }
     }
 }
 

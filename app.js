@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var orm = require('orm');
+var expressValidator = require('express-validator');
 
 var settings = require('./config/settings.js');
 var routes = require('./routes/index');
@@ -20,6 +21,7 @@ app.engine('.html', require('jade').renderFile);
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
+app.use(expressValidator({}));
 app.use(bodyParser.urlencoded({
     extended: true
 }));

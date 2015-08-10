@@ -38,17 +38,10 @@ module.exports = function (db, models) {
             unique: true
         },
         firstName: {
-            type: 'text',
-            required: true
-        },
-        dni: {
-            type: 'text',
-            required: true,
-            unique: true
+            type: 'text'
         },
         lastName: {
-            type: 'text',
-            required: true
+            type: 'text'
         },
         email: {
             type: 'text',
@@ -65,7 +58,7 @@ module.exports = function (db, models) {
     models.User.hasMany('roles', models.Role);
 
     // Sincronize db ONLY FOR FIRST
-    /*db.drop(function () {
+  /*  db.drop(function () {
         // dropped all tables from defined models (Person and Pet)
 
         db.sync(function () {

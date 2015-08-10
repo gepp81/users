@@ -1,19 +1,28 @@
-<div class="loginBody">
-    <form ng-submit="login.login()" method="post">
+<div class="autentificationForm">
+    <form ng-submit="login.login(signIn.$valid)" method="post" name="signIn" novalidate>
         <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">
-                <i class="fa fa-user fa-lg"></i>
+                <i class="fa fa-user fa-lg">&nbsp;</i>
             </span>
-            <input type="text" class="form-control" ng-model="login.user" placeholder="Usuario" aria-describedby="basic-addon1">
+            <input type="text" class="form-control" name="user" ng-model="login.user" placeholder="Usuario" aria-describedby="basic-addon1" ng-minlength="5" ng-maxlength="15" required />
         </div>
+        <span ng-show="signIn.user.$dirty && signIn.user.$invalid">
+            <div class="alert alert-danger" role="alert">El usuario debe tener entre 5 y 15 letras.</div>
+        </span>
+
+
         <div class="input-group">
             <span class="input-group-addon" id="basic-addon1">
                 <i class="fa fa-key fa-lg"></i>
             </span>
-            <input type="password" class="form-control" ng-model="login.password" placeholder="Clave" aria-describedby="basic-addon1">
-        </div>  
-        <div class="input-group" style="width: 100%;">
-            <button type="submit" class="btn btn-default" style="width: 100%;">Entrar</button>
-        </div>  
+            <input type="password" class="form-control" name="password" ng-model="login.password" placeholder="Clave" aria-describedby="basic-addon1" ng-minlength="5" ng-maxlength="15" required>
+        </div>
+        <span ng-show="signIn.password.$dirty && signIn.password.$invalid">
+            <div class="alert alert-danger" role="alert">La clave debe tener entre 5 y 15 letras.</div>
+        </span>
+
+        <div class="input-group width100">
+            <button type="submit" class="btn btn-default width100" ng-disabled="signIn.$invalid">Entrar</button>
+        </div>
     </form>
 </div>

@@ -10,7 +10,7 @@ a {
     height: 1em;
 }
 
-.loginBody {
+.autentificationForm {
     width: 35%;
     margin: auto;
     margin-top: 10%;
@@ -18,4 +18,8 @@ a {
 
 .input-group {
     margin-top: 5%;
+}
+
+.width100 {
+ width: 100%;   
 }
