@@ -7,14 +7,35 @@ var settings = require("./settings.js");
 var crypto = require('crypto');
 
 /**
- * SignUp
+ * Crea el Token para la sesión
+ */
+function createToken(user) {
+    var tokenUser = {
+        id: user.id,
+        permissions: user.permissions,
+        admin: user.admin
+    };
+    var payload = {
+        sub: tokenUser,
+        iat: moment().unix(),
+        exp: moment().add(1, "days").unix(),
+    };
+    return jwt.encode(payload, settings.tokenAuth.name);
+};
+
+/***
+ * SignUp 
+ **/
+
+/**
+ * Valida si los campos para registrarse son correcots.
  */
 function validateSignUpRequest(req) {
     req.assert('email', 'Requerido').notEmpty();
     req.assert('email', 'Debe ser una dirección de correo valida.').isEmail();
     req.assert('password', 'De 5 a 15 Caracteres.').len(5, 15);
     req.assert('passwordRepeat', 'De 5 a 15 Caracteres.').len(5, 15);
-    req.assert('user', 'De 5 a 15 Caracteres.').len(5, 15);
+    req.assert('user', 'De 5 a 25 Caracteres.').len(5, 25);
 
     var mappedErrors = req.validationErrors(true);
     if (req.body.password !== undefined && req.body.passwordRepeat !== undefined) {
@@ -27,6 +48,9 @@ function validateSignUpRequest(req) {
     return mappedErrors;
 }
 
+/**
+ * Valida si los campos usuario y/o email están en uso.
+ */
 function validateUserExists(req, users) {
     var mappedErrors = {
         hasErrors: false
@@ -55,6 +79,30 @@ function validateUserExists(req, users) {
     return mappedErrors;
 }
 
+/**
+ * Genera el token de la sesion y lo devuelve como respuesta
+ */
+function getUserToken(res, user) {
+    user.getPermissions(function(err, permissions) {
+        var list = new Array();
+        var permission;
+        for (var i in permissions) {
+            permission = permissions[i];
+            list.push(permission.view);
+        }
+        return res
+            .status(200)
+            .send({
+                token: createToken(user),
+                permissions: list
+            });
+    });
+}
+
+/**
+ * Crea el usuario en la base de datos y asocia sus permisos. 
+ * Por ser usuario nuevo solo tendra acceso a los permisos básicos.
+ */
 function createUserDB(req, res) {
     var shasum = crypto.createHash('sha1');
     shasum.update(req.body.password);
@@ -66,20 +114,33 @@ function createUserDB(req, res) {
         lastName: req.body.lastName,
         firstName: req.body.firstName
     }
-    req.models.User.create(user, function(err, items) {
+
+    req.models.User.create(user, function(err, userFound) {
         if (err) {
             return res.status(500).send({
-                error: "Cant Connect"
+                error: "Cant Create"
+            });
+        } else {
+            req.models.Permission.get(1, function(err, permission) {
+                userFound.addPermissions(permission, function(err) {
+                    if (err) {
+                        var errorMsg = 'Cant associate permissions to tihs user'
+                        return res
+                            .status(500)
+                            .send({
+                                error: errorMsg
+                            });
+                    }
+                    return getUserToken(res, userFound);
+                });
             });
         }
-        return res
-            .status(200)
-            .send({
-                token: createToken(user)
-            });
     });
-}
+};
 
+/**
+ * Crea un usuario si cumple con los requerimientos para registrarlo
+ */
 function createUserData(req, res) {
     req.models.User.find({
         or: [{
@@ -97,6 +158,9 @@ function createUserData(req, res) {
     });
 }
 
+/**
+ * Registra un usuario.
+ */
 exports.userSignup = function(req, res) {
     var mappedErrors = validateSignUpRequest(req);
     if (mappedErrors) {
@@ -106,19 +170,13 @@ exports.userSignup = function(req, res) {
     }
 };
 
-/**
+/***
  * SingIn
+ **/
+
+/**
+ * Inicia el login para un usuario.
  */
-
-function createToken(user) {
-    var payload = {
-        sub: user._id,
-        iat: moment().unix(),
-        exp: moment().add(1, "days").unix(),
-    };
-    return jwt.encode(payload, settings.tokenAuth.name);
-};
-
 exports.userLogin = function(req, res) {
     req.assert('user', "El usuario no puede estar vacio.").notEmpty();
     req.assert('password', "La contraseña no puede estar vacia.").notEmpty();
@@ -137,26 +195,27 @@ exports.userLogin = function(req, res) {
     }, function(err, users) {
         var user = users[0];
         if (user !== undefined && user.password === password) {
-            return res
-                .status(200)
-                .send({
-                    token: createToken(user)
-                });
+            return getUserToken(res, user);
         } else {
             return res.status(500).send({
-                error: "Cant Connect"
+                error: "Cant Get User"
             });
         }
     });
-
 };
 
+/**
+ * Accion para el logout del usuario.
+ */
 exports.userLogout = function(req, res) {
     return res
         .status(200)
         .send({});
 };
 
+/**
+ * Verifica que el usuario este logueado y que su sesion no este vencida.
+ */
 exports.ensureAuthenticated = function(req, res, next) {
     if (!req.headers.authorization) {
         return res
@@ -175,8 +234,33 @@ exports.ensureAuthenticated = function(req, res, next) {
             .send({
                 message: "El token ha expirado"
             });
+    } else {
+        req.userId = payload.sub.id;
+        req.userPermissions = payload.sub.permissions;
+        req.userAdmin = payload.sub.admin;
     }
-
-    req.user = payload.sub;
     next();
+}
+
+/**
+ * Verifica que tenga los permisos necesario para
+ */
+exports.ensurePermissions = function(permissions) {
+    return function(req, res, next) {
+        if (req.userAdmin) {
+            next();
+        }
+        var item;
+        for (var i in req.userPermissions) {
+            item = req.userPermissions[i].name;
+            if (permissions.indexOf(item) == -1) {
+                return res
+                    .status(401)
+                    .send({
+                        message: "No tienes los permisos suficientes."
+                    });
+            }
+        }
+        next();
+    }
 }

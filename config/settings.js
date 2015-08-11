@@ -5,7 +5,7 @@ var settings = {
             pool: true
         },
         host: "127.0.0.1",
-        database: "managment",
+        database: "io",
         user: "root",
         password: "root"
     },
@@ -13,7 +13,7 @@ var settings = {
         path: '/home/guillermo/Documents/prueba/gestor/bibliografia/'
     },
     tokenAuth: {
-        name: ""
+        name: "InsEcUrEtOkEn"
     }
     
 };

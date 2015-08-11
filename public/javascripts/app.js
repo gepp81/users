@@ -82,7 +82,7 @@ app.controller("AuthController", function($auth, $location, $scope) {
     $scope.isAuthenticated = function() {
         return $auth.isAuthenticated();
     };
-})
+});
 
 app
     .controller("SignUpController", SignUpController)
@@ -97,7 +97,9 @@ function SignUpController($scope, $auth, $location) {
                     user: vm.user,
                     password: vm.password,
                     passwordRepeat: vm.passwordRepeat,
-                    email: vm.email
+                    email: vm.email,
+                    firstName: vm.firstName,
+                    lastName: vm.lastName
                 })
                 .then(function(response) {
                     $location.path("/bibliografia");

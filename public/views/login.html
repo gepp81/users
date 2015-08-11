@@ -4,10 +4,10 @@
             <span class="input-group-addon" id="basic-addon1">
                 <i class="fa fa-user fa-lg">&nbsp;</i>
             </span>
-            <input type="text" class="form-control" name="user" ng-model="login.user" placeholder="Usuario" aria-describedby="basic-addon1" ng-minlength="5" ng-maxlength="15" required />
+            <input type="text" class="form-control" name="user" ng-model="login.user" placeholder="Usuario" aria-describedby="basic-addon1" ng-minlength="5" ng-maxlength="25" required />
         </div>
         <span ng-show="signIn.user.$dirty && signIn.user.$invalid">
-            <div class="alert alert-danger" role="alert">El usuario debe tener entre 5 y 15 letras.</div>
+            <div class="alert alert-danger" role="alert">El usuario debe tener entre 5 y 25 letras.</div>
         </span>
 
 

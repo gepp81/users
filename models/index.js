@@ -1,4 +1,4 @@
-module.exports = function (db, models) {
+module.exports = function(db, models) {
 
     models.Permission = db.define("permission", {
         id: 'serial',
@@ -11,24 +11,13 @@ module.exports = function (db, models) {
             type: 'text',
             required: true,
             unique: true
-        }
-    });
-
-    models.Role = db.define('role', {
-        id: 'serial',
-        name: {
-            type: 'text',
-            required: true,
-            unique: true
         },
-        alias: {
+        view: {
             type: 'text',
             required: true,
             unique: true
         }
     });
-
-    models.Role.hasMany("permissions", models.Permission);
 
     models.User = db.define('user', {
         id: 'serial',
@@ -55,13 +44,15 @@ module.exports = function (db, models) {
         admin: Boolean
     });
 
-    models.User.hasMany('roles', models.Role);
+    models.User.hasMany("permissions", models.Permission, {}, {
+        autoFetch: true
+    });
 
     // Sincronize db ONLY FOR FIRST
-  /*  db.drop(function () {
+    /*db.drop(function() {
         // dropped all tables from defined models (Person and Pet)
 
-        db.sync(function () {
+        db.sync(function() {
             // created tables for Person model
         });
     });*/
