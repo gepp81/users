@@ -54,7 +54,6 @@ app.use(function(req, res, next) {
 // will print stacktrace
 if (app.get('env') === 'development') {
     app.use(function(err, req, res, next) {
-
         return res.status(500).send({
             error: "Cant Connect"
         });

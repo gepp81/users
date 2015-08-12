@@ -94,7 +94,8 @@ function getUserToken(res, user) {
             .status(200)
             .send({
                 token: createToken(user),
-                permissions: list
+                permissions: list,
+                admin: user.admin
             });
     });
 }
@@ -243,22 +244,28 @@ exports.ensureAuthenticated = function(req, res, next) {
 }
 
 /**
- * Verifica que tenga los permisos necesario para
+ * Verifica que tenga los permisos necesario para acceder a un request
  */
 exports.ensurePermissions = function(permissions) {
     return function(req, res, next) {
         if (req.userAdmin) {
             next();
-        }
-        var item;
-        for (var i in req.userPermissions) {
-            item = req.userPermissions[i].name;
-            if (permissions.indexOf(item) == -1) {
-                return res
-                    .status(401)
-                    .send({
-                        message: "No tienes los permisos suficientes."
-                    });
+        } else {
+            var permissionsViews = new Array();
+            var item;
+            for (var i in req.userPermissions) {
+                item = req.userPermissions[i].name;
+                permissionsViews.push(item);
+            }
+            for (var i in permissions) {
+                item = permissions[i];
+                if (permissionsViews.indexOf(item) == -1) {
+                    return res
+                        .status(401)
+                        .send({
+                            message: "No tienes los permisos suficientes."
+                        });
+                }
             }
         }
         next();

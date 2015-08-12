@@ -11,6 +11,7 @@
     <script src='/javascripts/angular-tree/angular-tree-control.js' type='text/javascript'></script>
     <script src='/javascripts/angular/satellizer.min.js' type='text/javascript'></script>
     <script src='/javascripts/angular/angular-ui-router.min.js' type='text/javascript'></script>
+    <script src='/javascripts/angular/ngStorage.min.js' type='text/javascript'></script>
     <script src='/javascripts/app.js' type="text/javascript"></script>
 </head>
 
@@ -45,13 +46,29 @@
                     </li>
                 </ul>
                 <ul class="nav navbar-nav pull-right" >
-                    <li>
+                    <li ng-show="hasPermission('DEP_READ')">
                         <a href="/#/bibliografia">
                             <i class="fa fa-archive fa-lg"></i>
                             Bibliografía
                         </a>
                     </li>
                 </ul>
+                <ul class="nav navbar-nav pull-right" >
+                    <li ng-show="hasPermission('DEP_READ')">
+                        <a href="/#/dependencies">
+                            <i class="fa fa-list fa-lg"></i>
+                            Dependencias
+                        </a>
+                    </li>
+                </ul>                
+                <ul class="nav navbar-nav pull-right" >
+                    <li ng-show="hasPermission('USR_READ')">
+                        <a href="/#/users">
+                            <i class="fa fa-users fa-lg"></i>
+                            Usuarios
+                        </a>
+                    </li>
+                </ul>                
             </div>
         </div>
     </nav>
