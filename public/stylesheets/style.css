@@ -1,25 +1,45 @@
-body {
-}
-
-a {
-    color: #00B7FF;
-}
-
+body {}
+navbar .nav > li > a
+/** Bibliografia **/
 .bibliography-download {
     width: 1em;
     height: 1em;
 }
 
+/** Auth **/
 .autentificationForm {
     width: 35%;
     margin: auto;
     margin-top: 10%;
 }
 
-.input-group {
+.autentificationForm .input-group {
     margin-top: 5%;
 }
 
+/**
+ * Dependencies View
+ */
+.alertDependencies {
+    margin: auto;
+    width: 95%;
+    margin-top: 1%;
+}
+
+/** Widths **/
 .width100 {
- width: 100%;   
+    width: 100%;
+}
+
+.width70 {
+    width: 70%;
+}
+
+.width50 {
+    width: 50%;
+}
+
+.central {
+    width: 80%;
+    margin: auto;
 }

@@ -10,3 +10,85 @@ insert into permission (id, name, alias, view) value (6, 'USER_DELETE', 'Elimina
 
 insert into user_permissions(user_id, permissions_id) value(2,4);
 insert into user_permissions(user_id, permissions_id) value(2,1);
+
+INSERT INTO acronym VALUES (1, 'LEEH');
+INSERT INTO acronym VALUES (2, 'CV');
+INSERT INTO acronym VALUES (3, 'NJ');
+INSERT INTO acronym VALUES (4, 'CMS');
+INSERT INTO acronym VALUES (5, 'LM');
+INSERT INTO acronym VALUES (6, 'SnG');
+INSERT INTO acronym VALUES (7, 'PaK');
+INSERT INTO acronym VALUES (8, 'LHs');
+INSERT INTO acronym VALUES (9, 'CVs');
+INSERT INTO acronym VALUES (10, 'LPü');
+INSERT INTO acronym VALUES (11, 'LVA');
+INSERT INTO acronym VALUES (12, 'ESC');
+INSERT INTO acronym VALUES (13, 'NdJ');
+INSERT INTO acronym VALUES (14, 'RdB');
+INSERT INTO acronym VALUES (15, 'MnE');
+INSERT INTO acronym VALUES (16, 'PE');
+INSERT INTO acronym VALUES (17, 'Cob');
+
+
+INSERT INTO location VALUES (1, 'Necochea');
+INSERT INTO location VALUES (2, 'Mar del Plata');
+INSERT INTO location VALUES (3, 'Buenos Aires');
+INSERT INTO location VALUES (4, 'Bernal');
+INSERT INTO location VALUES (5, 'Chubut');
+INSERT INTO location VALUES (6, 'Santa Cruz');
+INSERT INTO location VALUES (7, 'Rio Grande');
+INSERT INTO location VALUES (8, 'Norte Bahía de San Sebastián');
+INSERT INTO location VALUES (9, 'Los Chorillos');
+INSERT INTO location VALUES (10, 'Río Coyle');
+INSERT INTO location VALUES (11, 'Puerto Santa Cruz');
+INSERT INTO location VALUES (12, 'Sur Lago Argentino');
+INSERT INTO location VALUES (13, 'Norte Lago Buenos Aires');
+INSERT INTO location VALUES (14, 'Cabo Vírgenes');
+INSERT INTO location VALUES (15, 'Margen sur del Río Santa Cruz');
+INSERT INTO location VALUES (16, 'Monte Entrance (margen sur del Río Santa Cruz)');
+INSERT INTO location VALUES (17, 'Parque Nacional Monte León');
+
+INSERT INTO country VALUES (1, 'Argentina');
+INSERT INTO country VALUES (2, 'Chile');
+
+INSERT INTO state VALUES (1, 'Córdoba');
+INSERT INTO state VALUES (2, 'Corrientes');
+INSERT INTO state VALUES (23, 'Entre Ríos');
+INSERT INTO state VALUES (3, 'Formosa');
+INSERT INTO state VALUES (4, 'Jujuy');
+INSERT INTO state VALUES (5, 'La Pampa');
+INSERT INTO state VALUES (6, 'La Rioja');
+INSERT INTO state VALUES (7, 'Mendoza');
+INSERT INTO state VALUES (8, 'Misiones');
+INSERT INTO state VALUES (9, 'Neuquén');
+INSERT INTO state VALUES (10, 'Río Negro');
+INSERT INTO state VALUES (11, 'Salta');
+INSERT INTO state VALUES (12, 'San Juan');
+INSERT INTO state VALUES (13, 'San Luis');
+INSERT INTO state VALUES (14, 'Santa Cruz');
+INSERT INTO state VALUES (15, 'Santa Fe');
+INSERT INTO state VALUES (16, 'Santiago del Estero');
+INSERT INTO state VALUES (17, 'Tierra del Fuego Antártida');
+INSERT INTO state VALUES (18, 'Ciudad de Buenos Aires');
+INSERT INTO state VALUES (19, 'Buenos Aires');
+INSERT INTO state VALUES (20, 'Catamarca');
+INSERT INTO state VALUES (21, 'Chaco');
+INSERT INTO state VALUES (22, 'Chubut');
+
+INSERT INTO site VALUES (1, 'Cabo Vírgenes');
+INSERT INTO site VALUES (2, 'Nombre de Jesús');
+INSERT INTO site VALUES (3, 'Lomas de Zamora');
+INSERT INTO site VALUES (4, 'El cementerio de la Misión Salesiana');
+INSERT INTO site VALUES (5, 'Las mandibulas');
+INSERT INTO site VALUES (6, 'San Genaro ');
+INSERT INTO site VALUES (7, 'Palermo Aike');
+INSERT INTO site VALUES (8, 'Las Horquetas');
+INSERT INTO site VALUES (9, 'La Pingüinera');
+INSERT INTO site VALUES (10, 'La Veradera Argentina');
+INSERT INTO site VALUES (11, 'Estancia Santa Costancia');
+INSERT INTO site VALUES (12, 'Rincón del Buque');
+INSERT INTO site VALUES (13, 'Monte Entrada');
+INSERT INTO site VALUES (14, 'Punta Entrada');
+INSERT INTO site VALUES (15, 'Cerro Observación');
+INSERT INTO site VALUES (15, 'San Julian');
+INSERT INTO site VALUES (17, 'FRAILES');

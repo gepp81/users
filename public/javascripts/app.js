@@ -83,6 +83,18 @@ app.factory("Book", function($resource) {
     return $resource("/getBibliography");
 });
 
+app.factory("Dependency", function($resource) {
+    return $resource("/getDependencies/:model/:page", {}, {
+        get: {
+            method: 'GET',
+            params: {
+                model: "@model",
+                page: "@page"
+            }
+        }
+    });
+});
+
 app.controller("bibliographyController", function($scope, Book) {
     Book.get(function(data) {
         $scope.roleList = data;
@@ -95,11 +107,15 @@ app.controller("AuthController", function($auth, $location, $scope, $localStorag
     };
 
     $scope.hasPermission = function(permission) {
-        if ($localStorage.permissions) {
-            if ($localStorage.permissions.indexOf(permission) == -1) {
-                return false;
-            }
+        if ($localStorage.admin) {
             return true;
+        } else {
+            if ($localStorage.permissions) {
+                if ($localStorage.permissions.indexOf(permission) == -1) {
+                    return false;
+                }
+                return true;
+            }
         }
         return false;
     }
@@ -125,7 +141,8 @@ function SignUpController($localStorage, $scope, $auth, $location) {
                 })
                 .then(function(response) {
                     $localStorage.permissions = response.data.permissions;
-                    $location.path("/bibliografia");
+                    $localStorage.admin = response.data.admin;
+                    $location.path("/home");
                 })
                 .catch(function(data) {
                     $scope.errors = data.data;
@@ -144,7 +161,8 @@ function LoginController($localStorage, $auth, $location) {
                 })
                 .then(function(response) {
                     $localStorage.permissions = response.data.permissions;
-                    $location.path("/bibliografia")
+                    $localStorage.admin = response.data.admin;
+                    $location.path("/home")
                 })
                 .catch(function(response) {});
         }
@@ -159,7 +177,7 @@ function LogoutController($auth, $location, $localStorage) {
     $localStorage.$reset();
 }
 
-function DependencyController($scope) {
+function DependencyController($scope, $timeout, Dependency) {
     $scope.dependencies = [{
         name: "Acronym",
         alias: "Acrónimo"
@@ -203,4 +221,56 @@ function DependencyController($scope) {
         name: "Site",
         alias: "Sitio"
     }];
+
+    $scope.dependenciesList = false;
+
+    $scope.alerts = [];
+
+    var addAlert = function(msg, type) {
+        if ($scope.selectedDependency) {
+            msg = msg + ' ' + $scope.selectedDependency.alias + '.';
+        }
+        var alert = {
+            type: type,
+            msg: msg
+        };
+        $scope.alerts.push(alert);
+        alert.close = function() {
+            $scope.alerts.splice($scope.alerts.indexOf(this), 1);
+        };
+
+        $timeout(function() {
+            $scope.alerts.splice($scope.alerts.indexOf(alert), 1);
+        }, 3000);
+    }
+
+    addAlert('Seleccione una dependencia.', 'info');
+
+    $scope.getDependencies = function() {
+        if ($scope.selectedDependency === undefined) {
+            addAlert('Seleccione una dependencia.', 'info');
+        } else {
+            Dependency.get({
+                model: $scope.selectedDependency.name,
+                page: $scope.currentPage ? $scope.currentPage : 1
+            }, function(data) {
+                if (data.length == 0) {
+                    $scope.dependenciesList = false;
+                    addAlert("No se han encontrado valores para", 'danger');
+                } else {
+                    $scope.dependenciesList = data.dependencies;
+                    $scope.totalItems = data.total;
+                }
+            }, function(error) {
+                $scope.dependenciesList = false;
+                addAlert("Error al buscar valores para", 'danger');
+            });
+        }
+    };
+
+    $scope.changePage = function(){
+        
+    }
+
+
 }

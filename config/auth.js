@@ -248,9 +248,7 @@ exports.ensureAuthenticated = function(req, res, next) {
  */
 exports.ensurePermissions = function(permissions) {
     return function(req, res, next) {
-        if (req.userAdmin) {
-            next();
-        } else {
+        if (!req.userAdmin) {
             var permissionsViews = new Array();
             var item;
             for (var i in req.userPermissions) {

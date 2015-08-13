@@ -1,4 +1,51 @@
-<h3>
-    Listado de Dependencias
-</h3>
-<select ng-options="item as item.alias for item in dependencies track by item.name" ng-model="selected" class="form-control"></select>
+<section class="central" ng-controller="DependencyController">
+    <h3>
+        Listado de Dependencias
+    </h3>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>Búsqueda de dependencia</h4>            
+            <div class="input-group width50">
+                <select ng-options="item as item.alias for item in dependencies track by item.name" ng-model="selectedDependency"
+                        class="form-control">
+                </select>
+                <span class="input-group-btn">
+                    <button class="btn btn-primary" type="button" ng-click="getDependencies()">&nbsp;Buscar&nbsp;</button>
+                </span>
+            </div>
+        </div>
+        
+        <div class="alertDependencies">
+            <alert ng-repeat="alert in alerts" type="{{alert.type}}">{{alert.msg}}</alert>
+        </div>
+        
+        <!-- Table -->
+        <table class="table">
+            <thead ng-show="dependenciesList">
+                <th>Nombre</th>
+                <th><span ng-show="hasPermission('DEP_WRITE')">Editar</span></th>
+                <th><span ng-show="hasPermission('DEP_DELETE')">Eliminar</span></th>
+            </thead>
+            <tbody ng-show="dependenciesList">
+                <!--tr ng-repeat="item in dependenciesList | filter: {id:searchProcess}"-->
+                <tr ng-repeat="item in dependenciesList">
+                    <td>{{item.name}}</td>
+                    <td>
+                        <button class="btn btn-warning btn-small" data-toggle="modal" data-target="#editModal" ng-click="edit(item)"
+                                 ng-show="hasPermission('DEP_WRITE')">
+                            Editar
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn-info btn-small" data-toggle="modal" data-target="#removeModal" ng-click="remove(item)"
+                                ng-show="hasPermission('DEP_DELETE')">
+                            Eliminar
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <pagination total-items="totalItems" ng-model="currentPage" ng-change="pageChanged()" ng-show="dependenciesList" 
+                    first-text="Primero" last-text="Último"></pagination>
+    </div>
+</section>

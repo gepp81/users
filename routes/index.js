@@ -104,13 +104,67 @@ function dirTree(filename) {
 }
 
 router.get('/getBibliography', auth.ensureAuthenticated, auth.ensurePermissions(['DEPENDENCY_READ']), function(req, res, next) {
-//router.get('/getBibliography', function(req, res, next) {
-    __parentDir = pathFunctions.dirname(module.parent.filename);
-    //var root = path.join(__parentDir, 'bibliografia');
-    var root = pathFunctions.join(settings.bibliography.path);
-    var json = dirTree(root);
-    res.json(json);
-
+    //router.get('/getBibliography', function(req, res, next) {
+    try {
+        var root = pathFunctions.join(settings.bibliography.path);
+        var json = dirTree(root);
+        res.status(200).json(json);
+    } catch (err) {
+        res.status(500).send({
+            error: 'Cant process the request'
+        });
+    }
 });
+
+router.get('/getDependencies/:model/:page', auth.ensureAuthenticated, auth.ensurePermissions(['DEPENDENCY_READ']),
+    function(req, res, next) {
+
+        async.parallel({
+                dependencies: function(callback) {
+                    var limit = 10;
+                    var page = 1;
+                    if (req.params.page) {
+                        page = req.params.page;
+                    }
+                    page = (page - 1) * 10;
+                    req.models[req.params.model].find().limit(limit).offset(page).run(function(err, dependencies) {
+                        if (err) {
+                            callback(err);
+                        }
+                        callback(null, dependencies);
+                    });
+                },
+                total: function(callback) {
+                    req.models[req.params.model].count(function(err, totalItems) {
+                        if (err) {
+                            callback(err);
+                        }
+                        callback(null, totalItems);
+                    });
+                }
+            },
+            function(err, results) {
+                if (err) {
+                    res.status(500).send({
+                        error: 'Cant get items.'
+                    });
+                } else {
+                    res.status(200).send(results);
+                }
+            });
+        console.log("Aa");
+        /* var limit = 10;
+         var page = 1;
+         if (req.params.page) {
+             page = req.params.page;
+         }
+         page = (page - 1) * 10;
+         req.models[req.params.model].find().limit(limit).offset(page).run(function(err, dependencies) {
+             if (err) {
+                 res.status(500).send({});
+             }
+             res.status(200).send(dependencies);
+         });*/
+    });
 
 module.exports = router;
