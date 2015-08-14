@@ -241,6 +241,7 @@ function DependencyController($scope, $timeout, Dependency) {
     }
 
     var getDependencies = function(page) {
+        $scope.cantSearch = true;
         if ($scope.selectedDependency === undefined) {
             addAlert('Seleccione una dependencia.', 'info');
         } else {
@@ -261,6 +262,7 @@ function DependencyController($scope, $timeout, Dependency) {
     };
 
     $scope.dependenciesList = false;
+    $scope.cantSearch = true;
     $scope.alerts = [];
     addAlert('Seleccione una dependencia.', 'info');
 
@@ -279,6 +281,10 @@ function DependencyController($scope, $timeout, Dependency) {
     $scope.pageChanged = function() {
         getDependencies($scope.currentPage);
     }
+    
+    $scope.searchTypeChanged = function() {
+        $scope.cantSearch = false;
+    }    
     
  /**   $scope.$on("$destroy", function(){
        console.log("");

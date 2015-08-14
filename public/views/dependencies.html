@@ -7,10 +7,11 @@
             <h4>Búsqueda de dependencia</h4>            
             <div class="input-group width50">
                 <select ng-options="item as item.alias for item in dependencies track by item.name" ng-model="selectedDependency"
-                        class="form-control">
+                        class="form-control" ng-change="searchTypeChanged()">
                 </select>
                 <span class="input-group-btn">
-                    <button class="btn btn-primary" type="button" ng-click="searchDependency()">&nbsp;Buscar&nbsp;</button>
+                    <button class="btn btn-primary" type="button" ng-click="searchDependency()" ng-disabled="cantSearch"> 
+                        &nbsp;Buscar&nbsp;</button>
                 </span>
             </div>
         </div>
