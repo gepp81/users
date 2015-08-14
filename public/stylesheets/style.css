@@ -1,9 +1,10 @@
 body {}
-navbar .nav > li > a
+
 /** Bibliografia **/
+
 .bibliography-download {
-    width: 1em;
-    height: 1em;
+    width: 1.4em;
+    height: 1.4em;
 }
 
 /** Auth **/
@@ -39,7 +40,14 @@ navbar .nav > li > a
     width: 50%;
 }
 
+/** Margin y padding **/
+.paddingLeftOnePercent {
+    padding-left: 2%!important;
+}
+
+
 .central {
     width: 80%;
     margin: auto;
 }
+

@@ -10,7 +10,7 @@
                         class="form-control">
                 </select>
                 <span class="input-group-btn">
-                    <button class="btn btn-primary" type="button" ng-click="getDependencies()">&nbsp;Buscar&nbsp;</button>
+                    <button class="btn btn-primary" type="button" ng-click="searchDependency()">&nbsp;Buscar&nbsp;</button>
                 </span>
             </div>
         </div>
@@ -20,32 +20,40 @@
         </div>
         
         <!-- Table -->
-        <table class="table">
-            <thead ng-show="dependenciesList">
-                <th>Nombre</th>
-                <th><span ng-show="hasPermission('DEP_WRITE')">Editar</span></th>
-                <th><span ng-show="hasPermission('DEP_DELETE')">Eliminar</span></th>
-            </thead>
-            <tbody ng-show="dependenciesList">
-                <!--tr ng-repeat="item in dependenciesList | filter: {id:searchProcess}"-->
-                <tr ng-repeat="item in dependenciesList">
-                    <td>{{item.name}}</td>
-                    <td>
-                        <button class="btn btn-warning btn-small" data-toggle="modal" data-target="#editModal" ng-click="edit(item)"
-                                 ng-show="hasPermission('DEP_WRITE')">
-                            Editar
-                        </button>
-                    </td>
-                    <td>
-                        <button class="btn btn-info btn-small" data-toggle="modal" data-target="#removeModal" ng-click="remove(item)"
-                                ng-show="hasPermission('DEP_DELETE')">
-                            Eliminar
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <pagination total-items="totalItems" ng-model="currentPage" ng-change="pageChanged()" ng-show="dependenciesList" 
-                    first-text="Primero" last-text="Último"></pagination>
+        <div ng-show="dependenciesList">
+            <table class="table">
+                <thead>
+                    <th class="width50">Nombre</th>
+                    <th><span ng-show="hasPermission('DEP_WRITE')">Editar</span></th>
+                    <th><span ng-show="hasPermission('DEP_DELETE')">Eliminar</span></th>
+                </thead>
+                <tbody>
+                    <!--tr ng-repeat="item in dependenciesList | filter: {id:searchProcess}"-->
+                    <tr ng-repeat="item in dependenciesList">
+                        <td class="paddingLeftOnePercent">{{item.name}}</td>
+                        <td>
+                            <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editModal" ng-click="edit(item)"
+                                     ng-show="hasPermission('DEP_WRITE')">
+                                Editar
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#removeModal" ng-click="remove(item)"
+                                    ng-show="hasPermission('DEP_DELETE')">
+                                Eliminar
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div style="text-align: center">
+                <pagination class="pagination" total-items="totalItems" ng-model="currentPage" ng-change="pageChanged()" 
+                        first-text="Primero" last-text="Último"></pagination>
+                <div>
+                    <span nf-if="totalItems > 0">{{getPaginationInfo()}}</span>                
+                </div>
+            </div>
+
+        </div>
     </div>
 </section>

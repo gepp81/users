@@ -118,53 +118,46 @@ router.get('/getBibliography', auth.ensureAuthenticated, auth.ensurePermissions(
 
 router.get('/getDependencies/:model/:page', auth.ensureAuthenticated, auth.ensurePermissions(['DEPENDENCY_READ']),
     function(req, res, next) {
-
-        async.parallel({
-                dependencies: function(callback) {
-                    var limit = 10;
-                    var page = 1;
-                    if (req.params.page) {
-                        page = req.params.page;
+        if (req.params.model) {
+            async.parallel({
+                    dependencies: function(callback) {
+                        var LIMIT = 10;
+                        var ORDER = 'name';
+                        var page = 1;
+                        if (req.params.page) {
+                            page = req.params.page;
+                        }
+                        page = (page - 1) * LIMIT;
+                        req.models[req.params.model].find().order(ORDER).limit(LIMIT).offset(page).run(function(err, dependencies) {
+                            if (err) {
+                                callback(err);
+                            }
+                            callback(null, dependencies);
+                        });
+                    },
+                    total: function(callback) {
+                        req.models[req.params.model].count(function(err, totalItems) {
+                            if (err) {
+                                callback(err);
+                            }
+                            callback(null, totalItems);
+                        });
                     }
-                    page = (page - 1) * 10;
-                    req.models[req.params.model].find().limit(limit).offset(page).run(function(err, dependencies) {
-                        if (err) {
-                            callback(err);
-                        }
-                        callback(null, dependencies);
-                    });
                 },
-                total: function(callback) {
-                    req.models[req.params.model].count(function(err, totalItems) {
-                        if (err) {
-                            callback(err);
-                        }
-                        callback(null, totalItems);
-                    });
-                }
-            },
-            function(err, results) {
-                if (err) {
-                    res.status(500).send({
-                        error: 'Cant get items.'
-                    });
-                } else {
-                    res.status(200).send(results);
-                }
+                function(err, results) {
+                    if (err) {
+                        res.status(500).send({
+                            error: 'Cant get items.'
+                        });
+                    } else {
+                        res.status(200).send(results);
+                    }
+                });
+        } else {
+            res.status(500).send({
+                error: 'Dont set the model.'
             });
-        console.log("Aa");
-        /* var limit = 10;
-         var page = 1;
-         if (req.params.page) {
-             page = req.params.page;
-         }
-         page = (page - 1) * 10;
-         req.models[req.params.model].find().limit(limit).offset(page).run(function(err, dependencies) {
-             if (err) {
-                 res.status(500).send({});
-             }
-             res.status(200).send(dependencies);
-         });*/
+        }
     });
 
 module.exports = router;

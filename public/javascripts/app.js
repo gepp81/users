@@ -44,12 +44,6 @@ var app = angular.module('GestorUI', ['treeControl', 'ngResource', 'satellizer',
             });
     });
 
-app.controller('Ctrl', function(
-    $scope,
-    $localStorage,
-    $sessionStorage
-) {});
-
 app.directive('equals', function() {
     return {
         restrict: 'A', // only activate on element attribute
@@ -222,10 +216,6 @@ function DependencyController($scope, $timeout, Dependency) {
         alias: "Sitio"
     }];
 
-    $scope.dependenciesList = false;
-
-    $scope.alerts = [];
-
     var addAlert = function(msg, type) {
         if ($scope.selectedDependency) {
             msg = msg + ' ' + $scope.selectedDependency.alias + '.';
@@ -244,33 +234,53 @@ function DependencyController($scope, $timeout, Dependency) {
         }, 3000);
     }
 
-    addAlert('Seleccione una dependencia.', 'info');
+    var failGetDependencies = function(msg) {
+        $scope.dependenciesList = false;
+        $scope.currentPage = 1;
+        addAlert(msg, 'danger');
+    }
 
-    $scope.getDependencies = function() {
+    var getDependencies = function(page) {
         if ($scope.selectedDependency === undefined) {
             addAlert('Seleccione una dependencia.', 'info');
         } else {
             Dependency.get({
                 model: $scope.selectedDependency.name,
-                page: $scope.currentPage ? $scope.currentPage : 1
+                page: page
             }, function(data) {
-                if (data.length == 0) {
-                    $scope.dependenciesList = false;
-                    addAlert("No se han encontrado valores para", 'danger');
+                if (data.dependencies.length == 0) {
+                    failGetDependencies("No se han encontrado valores para");
                 } else {
                     $scope.dependenciesList = data.dependencies;
                     $scope.totalItems = data.total;
                 }
             }, function(error) {
-                $scope.dependenciesList = false;
-                addAlert("Error al buscar valores para", 'danger');
+                failGetDependencies("Error al buscar valores para");
             });
         }
     };
 
-    $scope.changePage = function(){
-        
+    $scope.dependenciesList = false;
+    $scope.alerts = [];
+    addAlert('Seleccione una dependencia.', 'info');
+
+    $scope.getPaginationInfo = function() {
+        var page = $scope.currentPage ? $scope.currentPage : 1;
+        var min = (page - 1) * 10 + 1;
+        var max = (min + 9) < $scope.totalItems ? (min + 9) : $scope.totalItems ;
+        return "Items " + min.toString() + " al " + max + " . Total de items " + $scope.totalItems + ".";
     }
 
+    $scope.searchDependency = function() {
+        $scope.currentPage = 1;
+        getDependencies($scope.currentPage);
+    }
 
+    $scope.pageChanged = function() {
+        getDependencies($scope.currentPage);
+    }
+    
+ /**   $scope.$on("$destroy", function(){
+       console.log("");
+    });**/
 }
