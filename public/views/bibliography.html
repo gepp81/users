@@ -1,7 +1,7 @@
 <link rel='stylesheet' href='/stylesheets/style.css' />
 <link rel='stylesheet' href='/stylesheets/angular-tree/tree-control.css' />
 
-<div ng-controller='bibliographyController'>
+<div ng-controller='BibliographyController'>
     <treecontrol class="tree-classic" tree-model="roleList" options="treeOptions" on-selection="showSelected(node)" selected-node="node1">
         {{node.name}}
         <span ng-if="node.type == 'file'">({{node.size}})</span>
