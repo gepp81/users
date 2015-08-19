@@ -1,4 +1,4 @@
-function DependencyController($scope, $timeout, Dependency) {
+function DependencyController($scope, $timeout, $modal, Dependencies) {
     $scope.dependencies = [{
         name: "Acronym",
         alias: "Acrónimo"
@@ -61,42 +61,49 @@ function DependencyController($scope, $timeout, Dependency) {
         }, 3000);
     }
 
+    var MSG_DANGER = 'danger';
+    var MSG_INFO = 'info';
+    var MSG_SELECT = 'Seleccione una dependencia.';
+    var MSG_NOT_FOUND = "No se han encontrado valores para";
+    var MSG_ERROR = "Error al buscar valores para";
+
+    $scope.dependenciesList = false;
+    $scope.cantSearch = true;
+    $scope.alerts = [];
+    addAlert(MSG_SELECT, MSG_INFO);
+
     var failGetDependencies = function(msg) {
         $scope.dependenciesList = false;
         $scope.currentPage = 1;
-        addAlert(msg, 'danger');
+        addAlert(msg, MSG_DANGER);
     }
 
     var getDependencies = function(page) {
         $scope.cantSearch = true;
         if ($scope.selectedDependency === undefined) {
-            addAlert('Seleccione una dependencia.', 'info');
+            addAlert(MSG_SELECT, MSG_INFO);
         } else {
-            Dependency.get({
+            Dependencies.get({
                 model: $scope.selectedDependency.name,
                 page: page
             }, function(data) {
                 if (data.dependencies.length == 0) {
-                    failGetDependencies("No se han encontrado valores para");
+                    failGetDependencies(MSG_NOT_FOUND);
                 } else {
+                    $scope.alerts = [];
                     $scope.dependenciesList = data.dependencies;
                     $scope.totalItems = data.total;
                 }
             }, function(error) {
-                failGetDependencies("Error al buscar valores para");
+                failGetDependencies(MSG_ERROR);
             });
         }
     };
 
-    $scope.dependenciesList = false;
-    $scope.cantSearch = true;
-    $scope.alerts = [];
-    addAlert('Seleccione una dependencia.', 'info');
-
     $scope.getPaginationInfo = function() {
         var page = $scope.currentPage ? $scope.currentPage : 1;
         var min = (page - 1) * 10 + 1;
-        var max = (min + 9) < $scope.totalItems ? (min + 9) : $scope.totalItems ;
+        var max = (min + 9) < $scope.totalItems ? (min + 9) : $scope.totalItems;
         return "Items " + min.toString() + " al " + max + " . Total de items " + $scope.totalItems + ".";
     }
 
@@ -108,12 +115,71 @@ function DependencyController($scope, $timeout, Dependency) {
     $scope.pageChanged = function() {
         getDependencies($scope.currentPage);
     }
-    
+
     $scope.searchTypeChanged = function() {
         $scope.cantSearch = false;
-    }    
-    
- /**   $scope.$on("$destroy", function(){
-       console.log("");
-    });**/
+    }
+
+    /** New and Edit **/
+
+    $scope.open = function(size, item, selectedDependency) {
+        var modalInstance = $modal.open({
+            animation: $scope.animationsEnabled,
+            templateUrl: '/views/dependencies/form.html',
+            controller: ModalSaveController,
+            size: size,
+            resolve: {
+                dependency: function() {
+                    return {
+                        item: item,
+                        model: selectedDependency
+                    }
+                }
+            }
+        });
+
+        modalInstance.result.then(function(selectedItem) {
+            $scope.selected = selectedItem;
+        }, function() {
+
+        });
+    };
+
+    /**   $scope.$on("$destroy", function(){
+          console.log("");
+       });**/
+}
+
+function ModalSaveController($scope, $modalInstance, Dependency, dependency) {
+    $scope.dependency = dependency.item;
+    $scope.model = dependency.model.name;
+    $scope.modelAlias = dependency.model.alias;
+    $scope.originalName = dependency.item ? dependency.item.name : '';
+
+    $scope.ok = function() {
+        if ($scope.dependency.id) {
+            Dependency.put({
+                model: $scope.model,
+                name: $scope.dependency.name,
+                id: $scope.dependency.id
+            });
+        } else {
+            Dependency.post({
+                model: $scope.model,
+                name: $scope.dependency.name,
+            });
+        }
+        $modalInstance.close();
+    };
+
+    $scope.cancel = function() {
+        $modalInstance.dismiss();
+    };
+
+    $scope.equalsToOrigin = function(name) {
+        if (name === $scope.originalName) {
+            return true;
+        }
+        return false;
+    }
 }

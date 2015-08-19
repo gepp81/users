@@ -116,6 +116,60 @@ router.get('/getBibliography', auth.ensureAuthenticated, auth.ensurePermissions(
     }
 });
 
+function updateDependency(req, res) {
+    req.models[req.params.model].get(req.params.id, function(err, itemDB) {
+        itemDB.name = req.params.name;
+        itemDB.save(function(err) {
+            if (err) {
+                res.status(500).send({
+                    error: 'Error to update the value.'
+                });
+            } else {
+                res.status(200).send({});
+            }
+        });
+    });
+};
+
+function createDependency(req, res) {
+    var item = {
+        name: req.params.name
+    };
+    req.models[req.params.model].create(item, function(err, itemNew) {
+        if (err) {
+            console.error(err);
+            res.status(500).send({
+                error: 'Error to create the value.'
+            });
+        }
+        if (item.id) {
+            res.status(200).send({});
+        }
+    });
+};
+
+router.put('/dependency/:model/:id/:name', auth.ensureAuthenticated, auth.ensurePermissions(['DEPENDENCY_WRITE']),
+    function(req, res, next) {
+        if (req.params.model && req.params.id && req.params.name) {
+            updateDependency(req, res);
+        } else {
+            res.status(500).send({
+                error: 'Dont set the model.'
+            });
+        }
+    });
+
+router.post('/dependency/:model/:name', auth.ensureAuthenticated, auth.ensurePermissions(['DEPENDENCY_WRITE']),
+    function(req, res, next) {
+        if (req.params.model && req.params.name) {
+            createDependency(req, res);
+        } else {
+            res.status(500).send({
+                error: 'Dont set the model.'
+            });
+        }
+    });
+
 router.get('/getDependencies/:model/:page', auth.ensureAuthenticated, auth.ensurePermissions(['DEPENDENCY_READ']),
     function(req, res, next) {
         if (req.params.model) {

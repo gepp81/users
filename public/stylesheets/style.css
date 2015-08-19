@@ -1,4 +1,6 @@
-body {}
+body {
+    padding: 0.5%;
+}
 
 /** Bibliografia **/
 
@@ -8,6 +10,7 @@ body {}
 }
 
 /** Auth **/
+
 .autentificationForm {
     width: 35%;
     margin: auto;
@@ -21,6 +24,7 @@ body {}
 /**
  * Dependencies View
  */
+
 .alertDependencies {
     margin: auto;
     width: 95%;
@@ -28,6 +32,7 @@ body {}
 }
 
 /** Widths **/
+
 .width100 {
     width: 100%;
 }
@@ -40,14 +45,33 @@ body {}
     width: 50%;
 }
 
+.width30 {
+    width: 30%;
+}
+
 /** Margin y padding **/
+
 .paddingLeftOnePercent {
     padding-left: 2%!important;
 }
 
+.alignRight {
+    text-align: right;
+}
+
+.alignCenter {
+    text-align: center;
+}
+
+.marginAuto {
+    margin: 0 auto;
+}
+
+.modal {
+    margin-top: 15%;
+}
 
 .central {
     width: 80%;
     margin: auto;
 }
-

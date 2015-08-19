@@ -1,0 +1,37 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 ng-show="model">Editar {{modelAlias}}</h4>
+        <h4 ng-show="!model">Crear {{modelAlias}}</h4>
+    </div>
+    <div class="dependencyForm">
+        <form ng-submit="" method="post" name="editDependency" novalidate>
+            <div class="width50 marginAuto">
+                <br/>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">
+                        Nombre
+                    </span>                
+                    <input type="text" class="form-control" name="name" ng-model="dependency.name" placeholder="Nombre" 
+                           aria-describedby="basic-addon1" ng-minlength="1" ng-maxlength="60" required />
+                </div>
+                <!--span ng-show="signIn.user.$dirty && signIn.user.$invalid">
+                    <div class="alert alert-danger" role="alert">El usuario debe tener entre 5 y 25 letras.</div>
+                </span-->
+
+                <input type="hidden" class="form-control" name="model" ng-model="dependency.model" aria-describedby="basic-addon1">
+                <input type="hidden" class="form-control" name="id" ng-model="dependency.id" aria-describedby="basic-addon1">        
+                <br/>
+                <div class="input-group width100 alignCenter">
+                    <button type="submit" class="btn btn-warning width30" ng-click="cancel()">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-info width30" ng-click="ok()" 
+                            ng-disabled="editDependency.name.$pristine || editDependency.$invalid ||
+                                         equalsToOrigin(dependency.name)">
+                        Guardar
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

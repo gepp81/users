@@ -50,67 +50,115 @@ module.exports = function(db, models) {
 
     models.State = db.define("state", {
         id: 'integer',
-        name: String
+        name: {
+            type: 'text',
+            unique: true
+        }
     });
     models.Acronym = db.define("acronym", {
         id: 'integer',
-        name: String
+        name: {
+            type: 'text',
+            unique: true
+        }
     });
     models.Archaeologist = db.define("archaeologist", {
         id: 'integer',
-        name: String
+        name: {
+            type: 'text',
+            unique: true
+        }
     });
     models.Completeness = db.define("completeness", {
         id: 'integer',
-        name: String
+        name: {
+            type: 'text',
+            unique: true
+        }
     });
     models.Age = db.define("age", {
         id: 'integer',
-        name: String
+        name: {
+            type: 'text',
+            unique: true
+        }
     });
     models.Sex = db.define("sex", {
         id: 'integer',
-        name: String
+        name: {
+            type: 'text',
+            unique: true
+        }
     });
     models.Preservation = db.define("preservation", {
         id: 'integer',
-        name: String
+        name: {
+            type: 'text',
+            unique: true
+        }
     });
     models.Entity = db.define("entity", {
         id: 'integer',
-        name: String
+        name: {
+            type: 'text',
+            unique: true
+        }
     });
     models.Burial = db.define("burial", {
         id: 'integer',
-        name: String
+        name: {
+            type: 'text',
+            unique: true
+        }
     });
     models.Sepulture = db.define("sepulture", {
         id: 'integer',
-        name: String
+        name: {
+            type: 'text',
+            unique: true
+        }
     });
     models.Position = db.define("position", {
         id: 'integer',
-        name: String
+        name: {
+            type: 'text',
+            unique: true
+        }
     });
     models.Rest = db.define("rest", {
         id: 'integer',
-        name: String
+        name: {
+            type: 'text',
+            unique: true
+        }
     });
     models.Shape = db.define("shape", {
         id: 'integer',
-        name: String
+        name: {
+            type: 'text',
+            unique: true
+        }
     });
     models.Location = db.define("location", {
         id: 'integer',
-        name: String
+        name: {
+            type: 'text',
+            unique: true
+        }
     });
     models.Country = db.define("country", {
         id: 'integer',
-        name: String
+        name: {
+            type: 'text',
+            unique: true
+        }
     });
     models.Site = db.define("site", {
         id: 'integer',
-        name: String
+        name: {
+            type: 'text',
+            unique: true
+        }
     });
 
     // Sincronize db ONLY FOR FIRST

@@ -1,8 +1,9 @@
 var app = angular.module('GestorUI', ['treeControl', 'ngResource', 'satellizer', 'ui.router', 'ui.bootstrap', 'ngStorage'])
     .config(function($authProvider, $urlRouterProvider, $stateProvider) {
         // Parametros de configuración
-        $authProvider.loginUrl = "http://localhost:3000/auth/login";
-        $authProvider.signupUrl = "http://localhost:3000/auth/signup";
+        var urlAuth = "http://localhost:3000/auth/";
+        $authProvider.loginUrl = urlAuth + "login";
+        $authProvider.signupUrl = urlAuth + "signup";
         $authProvider.tokenName = "token";
         $authProvider.tokenPrefix = "GestorUI";
 
@@ -39,7 +40,7 @@ var app = angular.module('GestorUI', ['treeControl', 'ngResource', 'satellizer',
             })
             .state("dependencies", {
                 url: "/dependencies",
-                templateUrl: "views/dependencies.html",
+                templateUrl: "views/dependencies/list.html",
                 controller: "DependencyController"
             });
     });
@@ -77,7 +78,7 @@ app.factory("Book", function($resource) {
     return $resource("/getBibliography");
 });
 
-app.factory("Dependency", function($resource) {
+app.factory("Dependencies", function($resource) {
     return $resource("/getDependencies/:model/:page", {}, {
         get: {
             method: 'GET',
@@ -89,10 +90,31 @@ app.factory("Dependency", function($resource) {
     });
 });
 
+app.factory("Dependency", function($resource) {
+    return $resource("/dependency/:model/:id/:name", {}, {
+        post: {
+            method: 'POST',
+            params: {
+                model: "@model",
+                name: "@name"
+            }
+        },
+        put: {
+            method: 'PUT',
+            params: {
+                model: "@model",
+                id: "@id",
+                name: "@name"
+            }
+        }
+    });
+});
+
 app
     .controller("AuthController", AuthController)
     .controller("BibliographyController", BibliographyController)
     .controller("SignUpController", SignUpController)
     .controller("LoginController", LoginController)
     .controller("LogoutController", LogoutController)
-    .controller("DependencyController", DependencyController);
+    .controller("DependencyController", DependencyController)
+    .controller("ModalSaveController", ModalSaveController);
