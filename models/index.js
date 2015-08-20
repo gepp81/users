@@ -162,11 +162,11 @@ module.exports = function(db, models) {
     });
 
     // Sincronize db ONLY FOR FIRST
-    /*db.drop(function() {
+    db.drop(function() {
         // dropped all tables from defined models (Person and Pet)
 
         db.sync(function() {
             // created tables for Person model
         });
-    });*/
+    });
 };
