@@ -1,7 +1,7 @@
 var app = angular.module('GestorUI', ['treeControl', 'ngResource', 'satellizer', 'ui.router', 'ui.bootstrap', 'ngStorage'])
     .config(function($authProvider, $urlRouterProvider, $stateProvider) {
         // Parametros de configuración
-        var urlAuth = "https://pure-everglades-7957.herokuapp.com/auth/";
+        var urlAuth = "http://localhost:3000/auth/";
         $authProvider.loginUrl = urlAuth + "login";
         $authProvider.signupUrl = urlAuth + "signup";
         $authProvider.tokenName = "token";
