@@ -27,13 +27,13 @@ app.use(bodyParser.urlencoded({
 }));
 
 // Load Models DB
-app.use(orm.express(settings.database, {
+/*app.use(orm.express(settings.database, {
     define: function(db, models, next) {
         var listModels = require('./models/');
         listModels(db, models);
         next();
     }
-}));
+}));*/
 
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
