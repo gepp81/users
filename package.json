@@ -23,6 +23,7 @@
     "ngstorage": "^0.3.6",
     "node-inspector": "^0.12.2",
     "orm": "~2.1.26",
+    "pg": "4.4.1",
     "readdir": "0.0.13",
     "satellizer": "^0.11.3",
     "serve-favicon": "~2.2.1"

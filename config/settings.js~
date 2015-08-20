@@ -1,13 +1,13 @@
 var settings = {
     database: {
-        protocol: "postgres", // or "mysql"
+        protocol: "mysql", // or "mysql"
         query: {
             pool: true
         },
-        host: "ec2-54-197-255-248.compute-1.amazonaws.com",
-        database: "deq0ik2m5kq0ma",
-        user: "cdhqpobedstuxa",
-        password: " QNTGBl0NFxzit9MyTotT90fSSz"
+        host: "127.0.0.1",
+        database: "io",
+        user: "root",
+        password: "root"
     },
     bibliography: {
         path: '/home/guillermo/Documents/prueba/gestor/bibliografia/'
