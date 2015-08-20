@@ -63,6 +63,7 @@ function DependencyController($scope, $timeout, $modal, Dependencies) {
 
     var MSG_DANGER = 'danger';
     var MSG_INFO = 'info';
+    var MSG_SUCCESS = 'success';
     var MSG_SELECT = 'Seleccione una dependencia.';
     var MSG_NOT_FOUND = "No se han encontrado valores para";
     var MSG_ERROR = "Error al buscar valores para";
@@ -90,7 +91,6 @@ function DependencyController($scope, $timeout, $modal, Dependencies) {
                 if (data.dependencies.length == 0) {
                     failGetDependencies(MSG_NOT_FOUND);
                 } else {
-                    $scope.alerts = [];
                     $scope.dependenciesList = data.dependencies;
                     $scope.totalItems = data.total;
                 }
@@ -138,8 +138,9 @@ function DependencyController($scope, $timeout, $modal, Dependencies) {
             }
         });
 
-        modalInstance.result.then(function(selectedItem) {
-            $scope.selected = selectedItem;
+        modalInstance.result.then(function(msg) {
+            getDependencies($scope.currentPage ? $scope.currentPage : 1);
+            addAlert(msg.text, MSG_SUCCESS);  
         }, function() {
 
         });
@@ -162,17 +163,41 @@ function ModalSaveController($scope, $modalInstance, Dependency, dependency) {
                 model: $scope.model,
                 name: $scope.dependency.name,
                 id: $scope.dependency.id
+            }, function(data) {
+                var msg = {
+                    type: "SUCCESS",
+                    text: "Se ha actualizado con éxito un/una "
+                };
+                $modalInstance.close(msg);
+            }, function(error) {
+                var msg = {
+                    type: "ERROR",
+                    text: "Se ha producido un error al actualizar."
+                };
             });
         } else {
             Dependency.post({
                 model: $scope.model,
                 name: $scope.dependency.name,
+            }, function(data) {
+                var msg = {
+                    type: "SUCCESS",
+                    text: "Se ha creado con éxito un/una "
+                };
+                $modalInstance.close(msg);
+            }, function(error) {
+                var msg = {
+                    type: "ERROR",
+                    text: "Se ha producido un error al crear un item."
+                };
             });
         }
-        $modalInstance.close();
     };
 
     $scope.cancel = function() {
+        if ($scope.originalName) {
+            $scope.dependency.name = $scope.originalName;
+        }
         $modalInstance.dismiss();
     };
 

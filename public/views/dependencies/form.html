@@ -1,7 +1,7 @@
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h4 ng-show="model">Editar {{modelAlias}}</h4>
-        <h4 ng-show="!model">Crear {{modelAlias}}</h4>
+        <h4 ng-show="dependency.id">Editar {{modelAlias}}</h4>
+        <h4 ng-show="!dependency.id">Crear {{modelAlias}}</h4>
     </div>
     <div class="dependencyForm">
         <form ng-submit="" method="post" name="editDependency" novalidate>
