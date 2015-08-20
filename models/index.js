@@ -169,7 +169,7 @@ module.exports = function(db, models) {
             // created tables for Person model
         });
     });*/
-	var user = {
+	/*var user = {
 	id:1,
 	username:'sysadmin',
 	firstName: 'Administrador',
@@ -190,6 +190,6 @@ module.exports = function(db, models) {
 
 	models.Permission.create(per, function(err, perDB){
 
-	});
+	});*/
 	
 };
