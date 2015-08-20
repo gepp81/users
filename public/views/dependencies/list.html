@@ -13,7 +13,7 @@
                     <button class="btn btn-primary" type="button" ng-click="searchDependency()" ng-disabled="cantSearch"> 
                         &nbsp;Buscar&nbsp;</button>
                     <button class="btn btn-info" type="button" ng-click="open('lg', null, selectedDependency)"
-                            ng-disabled="!selectedDependency"> 
+                            ng-disabled="!selectedDependency" ng-show="hasPermission('DEP_WRITE')"> 
                         &nbsp;Nuevo&nbsp;</button>                    
                 </span>
             </div>
