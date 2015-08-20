@@ -162,11 +162,34 @@ module.exports = function(db, models) {
     });
 
     // Sincronize db ONLY FOR FIRST
-    db.drop(function() {
+    /*db.drop(function() {
         // dropped all tables from defined models (Person and Pet)
 
         db.sync(function() {
             // created tables for Person model
         });
-    });
+    });*/
+	var user = {
+	id:1,
+	username:'sysadmin',
+	firstName: 'Administrador',
+	secondName: 'Administrador',
+	email:'no@no.com',
+	password: '185b690770ab3ba9cede059ec80060bcaa6cfb36',
+	admin: true};
+	
+	models.User.create(user, function(err, userDB){
+
+	});
+
+	var per = {
+	id:1,
+	name:'DEPENDENCY_READ',
+	alias:'Lectura de Dependencias',
+	view:'DEP_READ'};
+
+	models.Permission.create(per, function(err, perDB){
+
+	});
+	
 };
