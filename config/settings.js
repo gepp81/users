@@ -11,7 +11,8 @@ var settings = {
         password: " QNTGBl0NFxzit9MyTotT90fSSz"
     },
     bibliography: {
-        path: '/home/guillermo/Documents/prueba/gestor/bibliografia/'
+        path: './public/bibliografia',
+        slash: '/'
     },
     tokenAuth: {
         name: "InsEcUrEtOkEn"

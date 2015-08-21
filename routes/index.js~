@@ -67,9 +67,9 @@ function isUnixHiddenPath(path) {
     return (/(^|.\/)\.+[^\/\.]/g).test(path);
 };
 
-function dirTree(filename, root) {
+function dirTree(filename) {
     if (!isUnixHiddenPath(filename)) {
-        var pathTruncated = filename.replace(root, '');
+        var pathTruncated = filename.replace(settings.bibliography.path, '');
         var stats = fs.lstatSync(filename),
             info = {
                 path: pathTruncated,
@@ -83,7 +83,7 @@ function dirTree(filename, root) {
 
             files.forEach(function(entry) {
                 if (!isUnixHiddenPath(entry)) {
-                    var child = dirTree(filename + entry, root);
+                    var child = dirTree(filename + entry);
                     info.children.push(child);
                     info.children.sort(function(one, second) {
                         return ((second.type == one.type) ? 0 : ((second.type > one.type) ? 1 : -1));
@@ -106,9 +106,8 @@ function dirTree(filename, root) {
 router.get('/getBibliography', auth.ensureAuthenticated, auth.ensurePermissions(['DEPENDENCY_READ']), function(req, res, next) {
     //router.get('/getBibliography', function(req, res, next) {
     try {
-        var root = pathFunctions.resolve(settings.bibliography.path);
-        root = root + settings.bibliography.slash;
-        var json = dirTree(root, root);
+        var root = pathFunctions.join(settings.bibliography.path);
+        var json = dirTree(root);
         res.status(200).json(json);
     } catch (err) {
         res.status(500).send({
