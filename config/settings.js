@@ -10,7 +10,8 @@ var settings = {
         password: "root"
     },
     bibliography: {
-        path: '/home/guillermo/Documents/prueba/gestor/bibliografia/'
+        path: './public/bibliografia',
+        slash: '/'
     },
     tokenAuth: {
         name: "InsEcUrEtOkEn"
