@@ -5,7 +5,8 @@ var pathFunctions = require('path');
 var readDir = require('readdir');
 var getMime = require('mime-types');
 var settings = require('../config/settings.js');
-var auth = require('../config/auth.js');
+var routesAuth = require('../config/auth.js');
+var routesDependency = require('./dependency.js');
 var async = require('async');
 
 /* home page. */
@@ -17,9 +18,18 @@ router.get('/', function(req, res, next) {
  * Login, SignUp and logout
  */
 
-router.post('/auth/signup', auth.userSignup);
-router.post('/auth/login', auth.userLogin);
-router.post('/auth/logout', auth.userLogout);
+router.post('/auth/signup', routesAuth.userSignup);
+router.post('/auth/login', routesAuth.userLogin);
+router.post('/auth/logout', routesAuth.userLogout);
+
+router.put('/dependency/:model/:id/:name', routesAuth.ensureAuthenticated, routesAuth.ensurePermissions(['DEPENDENCY_WRITE']),
+    routesDependency.updateDependency);
+
+router.post('/dependency/:model/:name', routesAuth.ensureAuthenticated, routesAuth.ensurePermissions(['DEPENDENCY_WRITE']),
+    routesDependency.createDependency);
+
+router.get('/getDependencies/:model/:page', routesAuth.ensureAuthenticated, routesAuth.ensurePermissions(['DEPENDENCY_READ']),
+    routesDependency.getDependencies);
 
 router.post('/test', function(req, res, next) {
 
@@ -103,8 +113,8 @@ function dirTree(filename, root) {
     }
 }
 
-//router.get('/getBibliography', auth.ensureAuthenticated, auth.ensurePermissions(['DEPENDENCY_READ']), function(req, res, next) {
-router.get('/getBibliography', function(req, res, next) {
+router.get('/getBibliography', routesAuth.ensureAuthenticated, routesAuth.ensurePermissions(['DEPENDENCY_READ']), function(req, res, next) {
+    //router.get('/getBibliography', function(req, res, next) {
     try {
         var root = pathFunctions.resolve(settings.bibliography.path);
         root = root + settings.bibliography.slash;
@@ -116,103 +126,5 @@ router.get('/getBibliography', function(req, res, next) {
         });
     }
 });
-
-function updateDependency(req, res) {
-    req.models[req.params.model].get(req.params.id, function(err, itemDB) {
-        itemDB.name = req.params.name;
-        itemDB.save(function(err) {
-            if (err) {
-                res.status(500).send({
-                    error: 'Error to update the value.'
-                });
-            } else {
-                res.status(200).send({});
-            }
-        });
-    });
-};
-
-function createDependency(req, res) {
-    var item = {
-        name: req.params.name
-    };
-    req.models[req.params.model].create(item, function(err, itemNew) {
-        if (err) {
-            console.error(err);
-            res.status(500).send({
-                error: 'Error to create the value.'
-            });
-        }
-        if (item.id) {
-            res.status(200).send({});
-        }
-    });
-};
-
-router.put('/dependency/:model/:id/:name', auth.ensureAuthenticated, auth.ensurePermissions(['DEPENDENCY_WRITE']),
-    function(req, res, next) {
-        if (req.params.model && req.params.id && req.params.name) {
-            updateDependency(req, res);
-        } else {
-            res.status(500).send({
-                error: 'Dont set the model.'
-            });
-        }
-    });
-
-router.post('/dependency/:model/:name', auth.ensureAuthenticated, auth.ensurePermissions(['DEPENDENCY_WRITE']),
-    function(req, res, next) {
-        if (req.params.model && req.params.name) {
-            createDependency(req, res);
-        } else {
-            res.status(500).send({
-                error: 'Dont set the model.'
-            });
-        }
-    });
-
-router.get('/getDependencies/:model/:page', auth.ensureAuthenticated, auth.ensurePermissions(['DEPENDENCY_READ']),
-    function(req, res, next) {
-        if (req.params.model) {
-            async.parallel({
-                    dependencies: function(callback) {
-                        var LIMIT = 10;
-                        var ORDER = 'name';
-                        var page = 1;
-                        if (req.params.page) {
-                            page = req.params.page;
-                        }
-                        page = (page - 1) * LIMIT;
-                        req.models[req.params.model].find().order(ORDER).limit(LIMIT).offset(page).run(function(err, dependencies) {
-                            if (err) {
-                                callback(err);
-                            }
-                            callback(null, dependencies);
-                        });
-                    },
-                    total: function(callback) {
-                        req.models[req.params.model].count(function(err, totalItems) {
-                            if (err) {
-                                callback(err);
-                            }
-                            callback(null, totalItems);
-                        });
-                    }
-                },
-                function(err, results) {
-                    if (err) {
-                        res.status(500).send({
-                            error: 'Cant get items.'
-                        });
-                    } else {
-                        res.status(200).send(results);
-                    }
-                });
-        } else {
-            res.status(500).send({
-                error: 'Dont set the model.'
-            });
-        }
-    });
 
 module.exports = router;
