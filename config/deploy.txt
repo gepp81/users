@@ -1,0 +1,4 @@
+git add ****
+git push origin cloud O git push origin master
+git push heroku cloud:master O git push heroku master
+heroku ps:scale web=1
