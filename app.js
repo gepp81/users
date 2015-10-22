@@ -35,6 +35,7 @@ app.use(orm.express("postgres://movkxcqiqsbzan:BWGz3ONKdAvseLX8ZgjeWUBQFh@ec2-54
     }
 }));
 
+
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
