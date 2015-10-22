@@ -27,7 +27,7 @@ app.use(bodyParser.urlencoded({
 }));
 
 // Load Models DB
-app.use(orm.express("postgres://cdhqpobedstuxa:QNTGBl0NFxzit9MyTotT90fSSz@ec2-54-197-255-248.compute-1.amazonaws.com:5432/deq0ik2m5kq0ma", {
+app.use(orm.express("postgres://movkxcqiqsbzan:BWGz3ONKdAvseLX8ZgjeWUBQFh@ec2-54-204-26-8.compute-1.amazonaws.com:5432/d4rho7ul70jpji", {
     define: function(db, models, next) {
         var listModels = require('./models/');
         listModels(db, models);
