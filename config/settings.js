@@ -5,10 +5,10 @@ var settings = {
             pool: true
         },
 	port: 5432,
-        host: "ec2-54-197-255-248.compute-1.amazonaws.com",
-        database: "deq0ik2m5kq0ma",
-        user: "cdhqpobedstuxa",
-        password: " QNTGBl0NFxzit9MyTotT90fSSz"
+        host: "ec2-54-204-26-8.compute-1.amazonaws.com",
+        database: "d4rho7ul70jpji",
+        user: "movkxcqiqsbzan",
+        password: "BWGz3ONKdAvseLX8ZgjeWUBQFh"
     },
     bibliography: {
         path: './public/bibliografia',
